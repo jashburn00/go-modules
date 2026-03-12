@@ -1,4 +1,4 @@
-package main
+package autocompletetrie
 
 import (
 	"testing"
