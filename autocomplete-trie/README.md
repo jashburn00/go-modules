@@ -14,16 +14,30 @@ The contributed `AutocompleteTrie` type has the following method functions:
 - `t.GetNodeAt([]byte)` (pointer receiver) which takes in an array of bytes to use to traverse the trie. It returns a node found at that path or `nil` if it didn't exist.
 
 # Examples
-For a trie initialized with the strings "foo", "bar", and "baz", `myTrie.GetNodeAt([]byte{'b'})` would return a trie node with node.Values being `["bar", "baz"]`
+For a trie initialized with the strings "foo", "bar", and "baz", `myTrie.GetNodeAt([]byte{'b','a'})` would return a trie node with node.Values being `["bar", "baz"]` and a map node.Children containing a mapping 'r' and a mapping 'z'
 
 This is why input strings are recommended to be listed in order of importance, because Values[0] would return the best option. 
 
-The trie is designed to autocomplete words, not phrases. For example, a trie initialized with the words "ham", "cheese", "sandwich" would be able to autocomplete the following strings:
+The trie is designed to autocomplete one word at a time. For example, a trie initialized with the words "ham", "cheese", "sandwich" would be able to autocomplete the following strings:
 
 "h" -> "ham"
 
-"ham an" -> "ham an" ("and" is not part of the trie)
+"ham an" -> "ham an" (because "and" is not part of the trie)
 
 "ham and c" -> "ham and cheese"
 
 "ham and cr" -> "ham and cr" (because "cr" does not match any words in the trie)
+
+However, words used to initialize the trie or which are added to the trie can contain spaces. 
+
+If you do not want the first entry to be autocompleted, use the method GetAllCompletions. This method will return a prefix (empty string for one-word queries) and an array of strings which are the available completions. The prefix is formatted so that prefix + completions[i] will be the autocompleted query. For example:
+
+ if the trie was initialized with ["anaconda","apples","action"], then you could use:
+ 
+`prefix, completions := t.GetAllCompletions("I really love a")`
+
+and `prefix + completions[1]` would be "I really love apples"
+
+<br>
+
+*Note: the trie is case-sensitive due to the nature of 'A' != 'a'*
