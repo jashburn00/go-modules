@@ -42,7 +42,10 @@ func TestAddWord(t *testing.T) {
 			t.Fatalf("Error creating trie: %s", err.Error())
 		}
 		//exercise
-		trie.AddWord("lemur")
+		err = trie.AddWord("lemur")
+		if err != nil {
+			t.Fatalf("Error adding word to trie: %s", err.Error())
+		}
 		//verify
 		completion := trie.Autocomplete("le")
 		if completion != "lemur" {
@@ -72,6 +75,23 @@ func TestGetAllCompletions(t *testing.T) {
 			if completions[i] != v {
 				t.Errorf("Expected completions %v but got %v", expected, completions)
 			}
+		}
+	})
+
+	t.Run("returns the input string as the only completion if there are no matches", func(t *testing.T) {
+		//setup
+		trie, err := MakeAutocompleteTrie([]string{"frog", "bat", "frond"})
+		if err != nil {
+			t.Fatalf("Error creating trie: %s", err.Error())
+		}
+		//exercise
+		prefix, completions := trie.GetAllCompletions("North Ame")
+		//verify
+		if prefix != "North " {
+			t.Errorf("Expected prefix to be 'North ' but got %q", prefix)
+		}
+		if len(completions) != 1 || completions[0] != "Ame" {
+			t.Errorf("Expected completions to be ['Ame'] but got %v", completions)
 		}
 	})
 }

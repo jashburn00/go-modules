@@ -30,7 +30,7 @@ The trie is designed to autocomplete one word at a time. For example, a trie ini
 
 However, words used to initialize the trie or which are added to the trie can contain spaces. 
 
-If you do not want the first entry to be autocompleted, use the method GetAllCompletions. This method will return a prefix (empty string for one-word queries) and an array of strings which are the available completions. The prefix is formatted so that prefix + completions[i] will be the autocompleted query. For example:
+If you want more control over autocomplete results, use the method GetAllCompletions. This method will return a prefix (empty string for one-word queries) and an array of strings which are the available completions. The prefix is formatted so that prefix + completions[i] will be the autocompleted query. For example:
 
  if the trie was initialized with ["anaconda","apples","action"], then you could use:
  
